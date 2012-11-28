@@ -16,7 +16,13 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.SignatureException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.IEKeySpec;
 
 
 public class Identity implements Serializable {
@@ -28,7 +34,7 @@ public class Identity implements Serializable {
 	private static final long serialVersionUID = -7996937974711664163L;
 	private final KeyPair kp;
 	
-	private Identity() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	public Identity() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
         KeyPairGenerator kg = KeyPairGenerator.getInstance("EC");
         kg.initialize(256, new SecureRandom());
         kp = kg.generateKeyPair();

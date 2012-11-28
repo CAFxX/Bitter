@@ -5,6 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 
 public class bitter {
 
@@ -14,13 +18,14 @@ public class bitter {
 		local = Identity.get();
 	}
 	
-	public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		bitter b = new bitter();
-		System.out.println(Serialization.toHex(Serialization.toByteArray(b.local.getPublicKey())));
-		Envelope e = new Envelope("ABCD");
-		b.local.sign(e);
+		System.out.println(Serialization.toHex(b.local.getPublicKey().getEncoded()));
+		Envelope e = new Envelope("Hello world", b.local);
+		for (int i=0; i<10; i++)
+			e = new Envelope(e, b.local);
 		System.out.println(e);
-		b.local.verify(e);
+		System.out.println(e.getDeep());
 	}
 
 }

@@ -1,5 +1,8 @@
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 
 
 public class Envelope implements Serializable {
@@ -7,7 +10,7 @@ public class Envelope implements Serializable {
 	private static final long serialVersionUID = 5549889559381800607L;
 
 	byte[] signature = null;
-	final byte[] payload;
+	byte[] payload;
 	
 	public String toString() {
 		return "Envelope\n\t" +
@@ -15,8 +18,9 @@ public class Envelope implements Serializable {
 				"payload:   " + Serialization.toHex(payload);
 	}
 
-	Envelope(Serializable payload) throws IOException {
-		this.payload = Serialization.toByteArray(payload); 
+	Envelope(Serializable payload, Identity I) throws IOException, InvalidKeyException, NoSuchAlgorithmException, SignatureException {
+		this.payload = Serialization.toByteArray(payload);
+		I.sign(this);
 	}
 	
 	Serializable get() throws IOException, ClassNotFoundException {
